@@ -4,12 +4,13 @@
 // </copyright>
 //-------------------------------------------------------------------------------
 
+using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Recipies
 {
-    public class Step
+    public class Step : IJsonConvertible
     {
         [JsonConstructor]
         public Step(Product input, double quantity, Equipment equipment, int time)
@@ -23,6 +24,22 @@ namespace Recipies
         public Step(string json)
         {
             this.LoadFromJson(json);
+            
+        }
+
+        public void LoadFromJson(string json)
+        {
+
+            Step deserialized = JsonSerializer.Deserialize<Step>(json);
+            this.Quantity = deserialized.Quantity;
+            this.Input = deserialized.Input;
+            this.Time = deserialized.Time;
+            this.Equipment = deserialized.Equipment;
+        }
+
+        public string ConvertToJson()
+        {
+            return JsonSerializer.Serialize(this);
         }
 
         public Product Input { get; set; }
